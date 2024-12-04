@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>충남과학고등학교 입학전형</title>
+    <title>입학전형 조회</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -56,28 +56,25 @@
 <body>
     <div class="form-container">
         <h1>입학전형 조회</h1>
-        <form id="form">
+        <form id="form" onsubmit="submitForm(event)">
             <label for="id">접수번호</label>
             <input type="text" id="id" placeholder="접수번호를 입력하세요" required>
             <label for="dob">생년월일</label>
             <input type="text" id="dob" placeholder="예: 2009-04-18" required>
             <label for="name">이름</label>
             <input type="text" id="name" placeholder="이름을 입력하세요" required>
-            <button type="button" onclick="submitForm()">조회하기</button>
+            <button type="submit">조회하기</button>
         </form>
     </div>
     <script>
-        function submitForm() {
+        function submitForm(event) {
+            event.preventDefault(); // 폼의 기본 동작을 막음
             const id = document.getElementById('id').value;
             const dob = document.getElementById('dob').value;
             const name = document.getElementById('name').value;
 
-            if (id === "100148" && dob === "2009-04-18" && name === "이재원") {
-                // 조건이 맞으면 결과 페이지로 이동
-                window.location.href = `result.html?id=${id}&dob=${dob}&name=${name}`;
-            } else {
-                alert("입력된 정보가 올바르지 않습니다.");
-            }
+            // 입력 값을 다음 페이지로 전달
+            window.location.href = `result.html?id=${id}&dob=${dob}&name=${name}`;
         }
     </script>
 </body>
