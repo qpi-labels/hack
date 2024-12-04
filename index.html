@@ -3,141 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>충남과학고등학교 최종합격자 발표</title>
+    <title>충남과학고등학교 입학전형</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
         body {
             font-family: 'Arial', sans-serif;
             background-color: #eaeaea;
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-        }
-        .container {
-            width: 100%;
-            max-width: 100%;
-            margin: 0;
-            background-color: white;
-            border: none;
-            box-shadow: none;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            width: 400px;
             padding: 20px;
-            font-size: 22px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        .form-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-container label {
+            display: block;
+            margin-bottom: 5px;
             font-weight: bold;
-            border-bottom: 1px solid #ddd;
         }
-        .header img {
-            max-width: 200px;
-            height: auto;
-        }
-        .table-top-border, .table-bottom-border {
-            height: 2px;
-            background-color: #007bff;
-        }
-        table {
+        .form-container input {
             width: 100%;
-            border-collapse: collapse;
-        }
-        table th, table td {
-            padding: 15px;
-            text-align: left;
-            font-size: 16px;
-            border-right: 1px solid #ddd; /* 세로 줄 추가 */
-        }
-        table th:last-child, table td:last-child {
-            border-right: none; /* 마지막 셀에는 줄 제거 */
-        }
-        table th {
-            width: 30%;
-            font-weight: bold;
-            background-color: white;
-            border-bottom: 1px solid #ddd;
-            border-top: 1px solid #ddd;
-        }
-        table td {
-            background-color: white;
-            border-bottom: 1px solid #ddd;
-            border-top: 1px solid #ddd;
-        }
-        .notice {
-            padding: 20px;
-            text-align: left;
-            font-size: 16px;
-            color: #333;
-            border-top: 1px solid #ddd;
-        }
-        .notice strong {
-            color: purple;
-        }
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            padding: 20px;
-            background-color: white; /* 버튼 영역을 흰색으로 변경 */
-        }
-        .buttons button {
-            width: 120px;
             padding: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
             color: white;
+            border: none;
+            border-radius: 3px;
+            font-size: 16px;
+            cursor: pointer;
         }
-        .btn-pass {
-            background-color: #0056b3; /* 더 어두운 파란색 */
-        }
-        .btn-requery {
-            background-color: #6c757d;
+        .form-container button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div>2025학년도 충남과학고등학교 입학전형 최종합격자 발표</div>
-            <img src="images.jpg" alt="학교 로고">
-        </div>
-        <div class="table-top-border"></div>
-        <table>
-            <tr>
-                <th>전형</th>
-                <td>일반전형</td>
-            </tr>
-            <tr>
-                <th>접수번호</th>
-                <td>100148</td>
-            </tr>
-            <tr>
-                <th>생년월일</th>
-                <td>2009년 04월 18일</td>
-            </tr>
-            <tr>
-                <th>지원자명</th>
-                <td>이재원</td>
-            </tr>
-        </table>
-        <div class="table-bottom-border"></div>
-        <div class="notice">
-            이재원님은 충남과학고등학교 신입학에 <strong>최종 합격</strong>하였습니다.
-        </div>
-        <div class="buttons">
-            <button class="btn-pass">합격증</button>
-            <button class="btn-requery">다시조회</button>
-        </div>
+    <div class="form-container">
+        <h1>입학전형 조회</h1>
+        <form id="form">
+            <label for="id">접수번호</label>
+            <input type="text" id="id" placeholder="접수번호를 입력하세요" required>
+            <label for="dob">생년월일</label>
+            <input type="text" id="dob" placeholder="예: 2009-04-18" required>
+            <label for="name">이름</label>
+            <input type="text" id="name" placeholder="이름을 입력하세요" required>
+            <button type="button" onclick="submitForm()">조회하기</button>
+        </form>
     </div>
+    <script>
+        function submitForm() {
+            const id = document.getElementById('id').value;
+            const dob = document.getElementById('dob').value;
+            const name = document.getElementById('name').value;
+
+            if (id === "100148" && dob === "2009-04-18" && name === "이재원") {
+                // 조건이 맞으면 결과 페이지로 이동
+                window.location.href = `result.html?id=${id}&dob=${dob}&name=${name}`;
+            } else {
+                alert("입력된 정보가 올바르지 않습니다.");
+            }
+        }
+    </script>
 </body>
 </html>
