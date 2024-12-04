@@ -28,15 +28,15 @@
         }
         .form-container label {
             display: block;
-            margin-bottom: 5px;
             font-weight: bold;
+            margin-bottom: 5px;
         }
         .form-container input {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ddd;
-            border-radius: 3px;
+            border-radius: 5px;
         }
         .form-container button {
             width: 100%;
@@ -44,8 +44,9 @@
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 3px;
+            border-radius: 5px;
             font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
         }
         .form-container button:hover {
@@ -56,25 +57,25 @@
 <body>
     <div class="form-container">
         <h1>입학전형 조회</h1>
-        <form id="form" onsubmit="submitForm(event)">
-            <label for="id">접수번호</label>
-            <input type="text" id="id" placeholder="접수번호를 입력하세요" required>
+        <form onsubmit="submitForm(event)">
+            <label for="examNumber">접수번호</label>
+            <input type="text" id="examNumber" placeholder="접수번호를 입력하세요" required>
             <label for="dob">생년월일</label>
             <input type="text" id="dob" placeholder="예: 2009-04-18" required>
-            <label for="name">이름</label>
+            <label for="name">지원자명</label>
             <input type="text" id="name" placeholder="이름을 입력하세요" required>
-            <button type="submit">조회하기</button>
+            <button type="submit">결과 확인</button>
         </form>
     </div>
     <script>
         function submitForm(event) {
-            event.preventDefault(); // 폼의 기본 동작을 막음
-            const id = document.getElementById('id').value;
+            event.preventDefault(); // 기본 폼 제출 동작을 막음
+            const examNumber = document.getElementById('examNumber').value;
             const dob = document.getElementById('dob').value;
             const name = document.getElementById('name').value;
 
-            // 입력 값을 다음 페이지로 전달
-            window.location.href = `result.html?id=${id}&dob=${dob}&name=${name}`;
+            // 입력된 값을 URL 파라미터로 전달
+            window.location.href = `result.html?examNumber=${examNumber}&dob=${dob}&name=${name}`;
         }
     </script>
 </body>
