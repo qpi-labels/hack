@@ -3,82 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>입학전형 결과</title>
+    <title>충남과학고등학교 최종합격자 발표</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: 'Arial', sans-serif;
             background-color: #eaeaea;
             margin: 0;
             padding: 0;
+            width: 100%;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            height: 100vh;
         }
         .container {
-            width: 600px;
+            width: 800px;
+            margin-top: 20px;
             background-color: white;
             padding: 20px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
         }
-        .container h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .info {
-            margin-bottom: 20px;
-        }
-        .info label {
+        .header {
+            font-size: 22px;
             font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
         }
-        .info div {
-            margin-bottom: 10px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
         }
-        .buttons button {
-            padding: 10px 20px;
+        .notice {
+            margin-top: 20px;
             font-size: 16px;
-            border: none;
-            cursor: pointer;
-            color: white;
-            border-radius: 3px;
+            color: #333;
         }
-        .btn-pass {
-            background-color: #0056b3;
-        }
-        .btn-requery {
-            background-color: #6c757d;
+        .notice strong {
+            color: purple;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>입학전형 결과</h1>
-        <div class="info">
-            <div><label>접수번호:</label> <span id="id"></span></div>
-            <div><label>생년월일:</label> <span id="dob"></span></div>
-            <div><label>이름:</label> <span id="name"></span></div>
-        </div>
-        <div class="buttons">
-            <button class="btn-pass">합격증</button>
-            <button class="btn-requery" onclick="goBack()">다시조회</button>
+        <div class="header">2025학년도 충남과학고등학교 입학전형 최종합격자 발표</div>
+        <table>
+            <tr>
+                <th>전형</th>
+                <td>일반전형</td>
+            </tr>
+            <tr>
+                <th>접수번호</th>
+                <td id="displayExamNumber">-</td>
+            </tr>
+            <tr>
+                <th>생년월일</th>
+                <td id="displayDob">-</td>
+            </tr>
+            <tr>
+                <th>지원자명</th>
+                <td id="displayName">-</td>
+            </tr>
+        </table>
+        <div class="notice">
+            <span id="displayNameNotice"></span>님은 충남과학고등학교 신입학에 <strong>최종 합격</strong>하였습니다.
         </div>
     </div>
-    <script>
-        // URL에서 데이터 가져오기
-        const urlParams = new URLSearchParams(window.location.search);
-        document.getElementById('id').textContent = urlParams.get('id');
-        document.getElementById('dob').textContent = urlParams.get('dob');
-        document.getElementById('name').textContent = urlParams.get('name');
 
-        function goBack() {
-            window.location.href = "index.html";
-        }
+    <script>
+        // URL에서 파라미터 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const examNumber = urlParams.get('examNumber');
+        const dob = urlParams.get('dob');
+        const name = urlParams.get('name');
+
+        // 결과 표시
+        document.getElementById('displayExamNumber').textContent = examNumber || '-';
+        document.getElementById('displayDob').textContent = dob || '-';
+        document.getElementById('displayName').textContent = name || '-';
+        document.getElementById('displayNameNotice').textContent = name || '';
     </script>
 </body>
 </html>
