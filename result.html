@@ -5,105 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QPI 최종합격자 발표</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #eaeaea;
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-        .container {
-            width: 100%; /* 화면의 전체 폭 사용 */
-            max-width: 100%;
-            margin: 0;
-            padding: 0;
-            background-color: white;
-            border: none;
-            box-shadow: none;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            font-size: 22px;
-            font-weight: bold;
-            border-bottom: 1px solid #ddd;
-        }
-        .header img {
-            max-width:200px;
-            height: auto;
-        }
-        .table-top-border, .table-bottom-border {
-            height: 2px;
-            background-color: #007bff;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table th, table td {
-            padding: 15px;
-            text-align: left;
-            font-size: 16px;
-            border-right: 1px solid #ddd; /* 세로 줄 추가 */
-        }
-        table th:last-child, table td:last-child {
-            border-right: none; /* 마지막 셀에는 줄 제거 */
-        }
-        table th {
-            width: 30%;
-            font-weight: bold;
-            background-color: white;
-            border-bottom: 1px solid #ddd;
-            border-top: 1px solid #ddd;
-        }
-        table td {
-            background-color: white;
-            border-bottom: 1px solid #ddd;
-            border-top: 1px solid #ddd;
-        }
-        .notice {
-            padding: 20px;
-            text-align: left;
-            font-size: 16px;
-            color: #333;
-            border-top: 1px solid #ddd;
-        }
-        .notice strong {
-            color: purple;
-        }
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            padding: 20px;
-            background-color: white; /* 버튼 영역을 흰색으로 변경 */
-        }
-        .buttons button {
-            width: 120px;
-            padding: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            color: white;
-        }
-        .btn-pass {
-            background-color: #0056b3; /* 더 어두운 파란색 */
-        }
-        .btn-requery {
-            background-color: #6c757d;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Arial', sans-serif; background-color: #eaeaea;
+            width: 100%; height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
+        .container { width: 100%; max-width: 100%; background-color: white; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; font-size: 22px; font-weight: bold; border-bottom: 1px solid #ddd; }
+        .header img { max-width:200px; height: auto; }
+        .table-top-border, .table-bottom-border { height: 2px; background-color: #007bff; }
+        table { width: 100%; border-collapse: collapse; }
+        table th, table td { padding: 15px; text-align: left; font-size: 16px; border-right: 1px solid #ddd; }
+        table th:last-child, table td:last-child { border-right: none; }
+        table th { width: 30%; background-color: white; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; }
+        table td { background-color: white; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; }
+        .notice { padding: 20px; font-size: 16px; color: #333; border-top: 1px solid #ddd; }
+        .notice strong { color: purple; }
+        .buttons { display: flex; justify-content: center; gap: 10px; padding: 20px; background-color: white; }
+        .buttons button { width: 120px; padding: 10px; font-size: 16px; font-weight: bold; border: none; cursor: pointer; color: white; }
+        .btn-pass { background-color: #0056b3; }
+        .btn-requery { background-color: #6c757d; }
     </style>
 </head>
 <body>
@@ -114,45 +33,40 @@
         </div>
         <div class="table-top-border"></div>
         <table>
-            <tr>
-                <th>전형</th>
-                <td>일반전형</td>
-            </tr>
-            <tr>
-                <th>학번</th>
-                <td id="displayExamNumber">-</td>
-            </tr>
-            <tr>
-                <th>생년월일</th>
-                <td id="displayDob">-</td>
-            </tr>
-            <tr>
-                <th>지원자명</th>
-                <td id="displayName">-</td>
-            </tr>
+            <tr><th>전형</th><td>일반전형</td></tr>
+            <tr><th>학번</th><td id="displayExamNumber">-</td></tr>
+            <tr><th>생년월일</th><td id="displayDob">-</td></tr>
+            <tr><th>지원자명</th><td id="displayName">-</td></tr>
         </table>
         <div class="table-bottom-border"></div>
-        <div class="notice">
-            <span id="displayNameNotice"></span>님은 QPI 부원 모집에 <strong>최종 합격</strong>하였습니다.
-        </div>
+        <div class="notice" id="displayNameNotice"></div>
         <div class="buttons">
-            <button class="btn-pass">합격증</button>
+            <button class="btn-pass" id="passButton">합격증</button>
             <button class="btn-requery" onclick="goBack()">다시조회</button>
         </div>
     </div>
 
     <script>
-        // URL에서 전달받은 파라미터 가져오기
         const urlParams = new URLSearchParams(window.location.search);
         const examNumber = urlParams.get('examNumber');
         const dob = urlParams.get('dob');
         const name = urlParams.get('name');
+        const status = urlParams.get('status');
 
-        // 가져온 값을 화면에 표시
         document.getElementById('displayExamNumber').textContent = examNumber || '-';
         document.getElementById('displayDob').textContent = dob || '-';
         document.getElementById('displayName').textContent = name || '-';
-        document.getElementById('displayNameNotice').textContent = name || '-';
+
+        const noticeEl = document.getElementById('displayNameNotice');
+        const passBtn = document.getElementById('passButton');
+
+        if (status === 'pass') {
+            noticeEl.innerHTML = `${name}님은 QPI 부원 모집에 <strong>최종 합격</strong>하였습니다.`;
+            passBtn.style.display = 'inline-block';
+        } else {
+            noticeEl.innerHTML = `아쉽지만 ${name}님은 QPI 신규 부원 모집 명단에 없습니다.`;
+            passBtn.style.display = 'none';
+        }
 
         function goBack() {
             window.location.href = "index.html";
