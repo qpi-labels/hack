@@ -110,71 +110,74 @@
     </div>
 
     <script>
-        function populateYears() {
-            const yearSelect = document.getElementById('year');
-            const currentYear = new Date().getFullYear();
-            for (let year = currentYear; year >= currentYear - 100; year--) {
-                const option = document.createElement('option');
-                option.value = year;
-                option.textContent = year + '년';
-                yearSelect.appendChild(option);
-            }
+    function populateYears() {
+        const yearSelect = document.getElementById('year');
+        const currentYear = new Date().getFullYear();
+        for (let year = currentYear; year >= currentYear - 100; year--) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year + '년';
+            yearSelect.appendChild(option);
         }
+    }
 
-        async function submitForm(event) {
-            event.preventDefault();
+    async function submitForm(event) {
+        event.preventDefault();
+        
+        const examNumber = document.getElementById('examNumber').value.trim();
+        const year = document.getElementById('year').value;
+        const month = document.getElementById('month').value;
+        const day = document.getElementById('day').value;
+        const name = document.getElementById('name').value.trim();
+
+        if (!year || !month || !day) {
+            alert('생년월일을 모두 입력해 주세요.');
+            return;
+        }
+        const maxDay = new Date(year, month, 0).getDate();
+        if (day < 1 || day > maxDay) {
+            alert(`${month}월은 1일부터 ${maxDay}일까지 입력 가능합니다.`);
+            return;
+        }
+        const dob = `${year}년 ${month}월 ${day}일`;
+
+        const submitBtn = event.target.querySelector('.submit-btn');
+        submitBtn.textContent = '확인 중...';
+        submitBtn.disabled = true;
+
+        try {
+            // [핵심 수정] 경로를 현재 폴더 기준으로 명확하게 './'를 추가했습니다.
+            const response = await fetch('./list.json'); 
             
-            const examNumber = document.getElementById('examNumber').value.trim();
-            const year = document.getElementById('year').value;
-            const month = document.getElementById('month').value;
-            const day = document.getElementById('day').value;
-            const name = document.getElementById('name').value.trim();
-
-            if (!year || !month || !day) {
-                alert('생년월일을 모두 입력해 주세요.');
-                return;
+            if (!response.ok) {
+                // 404 Not Found 등 에러가 발생하면 여기서 잡힙니다.
+                throw new Error(`파일을 불러오는데 실패했습니다. (Status: ${response.status})`);
             }
-            const maxDay = new Date(year, month, 0).getDate();
-            if (day < 1 || day > maxDay) {
-                alert(`${month}월은 1일부터 ${maxDay}일까지 입력 가능합니다.`);
-                return;
+            const data = await response.json();
+
+            let found = false;
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].학번 === examNumber && data[i].이름 === name) {
+                    found = true;
+                    break;
+                }
             }
-            const dob = `${year}년 ${month}월 ${day}일`;
 
-            const submitBtn = event.target.querySelector('.submit-btn');
-            submitBtn.textContent = '확인 중...';
-            submitBtn.disabled = true;
-
-            try {
-                const response = await fetch('list.json');
-                if (!response.ok) {
-                    throw new Error('list.json 파일을 불러올 수 없습니다.');
-                }
-                const data = await response.json();
-
-                let found = false;
-                for (let i = 0; i < data.length; i++) {
-                    // [핵심 수정] 자바스크립트 객체 키를 list.json의 "학번", "이름"과 일치시켰습니다.
-                    if (data[i].학번 === examNumber && data[i].이름 === name) {
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (found) {
-                    window.location.href = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}&status=pass`;
-                } else {
-                    window.location.href = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}&status=fail`;
-                }
-            } catch (error) {
-                alert('명단을 불러오는 중 오류가 발생했습니다: ' + error.message);
-                console.error(error);
-                submitBtn.textContent = '결과 확인';
-                submitBtn.disabled = false;
+            if (found) {
+                window.location.href = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}&status=pass`;
+            } else {
+                window.location.href = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}&status=fail`;
             }
+        } catch (error) {
+            // 오류 발생 시 사용자에게 알려줍니다.
+            alert('오류가 발생했습니다. 깃허브 리포지토리에 list.json 파일이 올바르게 올라가 있는지 확인해주세요. 에러 내용: ' + error.message);
+            console.error(error);
+            submitBtn.textContent = '결과 확인';
+            submitBtn.disabled = false;
         }
+    }
 
-        document.addEventListener('DOMContentLoaded', populateYears);
-    </script>
+    document.addEventListener('DOMContentLoaded', populateYears);
+</script>
 </body>
 </html>
