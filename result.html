@@ -47,26 +47,32 @@
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const examNumber = urlParams.get('examNumber');
-        const dob = urlParams.get('dob');
-        const name = urlParams.get('name');
-        const status = urlParams.get('status');
+        // [수정] DOM이 모두 로드된 후 스크립트를 실행하여 안정성을 확보합니다.
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const examNumber = urlParams.get('examNumber');
+            const dob = urlParams.get('dob');
+            const name = urlParams.get('name');
+            const status = urlParams.get('status');
 
-        document.getElementById('displayExamNumber').textContent = examNumber || '-';
-        document.getElementById('displayDob').textContent = dob || '-';
-        document.getElementById('displayName').textContent = name || '-';
+            document.getElementById('displayExamNumber').textContent = examNumber || '-';
+            document.getElementById('displayDob').textContent = dob || '-';
+            document.getElementById('displayName').textContent = name || '-';
 
-        const noticeEl = document.getElementById('displayNameNotice');
-        const passBtn = document.getElementById('passButton');
+            const noticeEl = document.getElementById('displayNameNotice');
+            const passBtn = document.getElementById('passButton');
 
-        if (status === 'pass') {
-            noticeEl.innerHTML = `${name}님은 QPI 부원 모집에 <strong>최종 합격</strong>하였습니다.`;
-            passBtn.style.display = 'inline-block';
-        } else {
-            noticeEl.innerHTML = `아쉽지만 ${name}님은 QPI 신규 부원 모집 명단에 없습니다.`;
-            passBtn.style.display = 'none';
-        }
+            // URL 파라미터로 전달된 name이 없을 경우를 대비해 '지원자'로 표시되도록 수정
+            const applicantName = name || '지원자';
+
+            if (status === 'pass') {
+                noticeEl.innerHTML = `${applicantName}님은 QPI 부원 모집에 <strong>최종 합격</strong>하였습니다.`;
+                passBtn.style.display = 'inline-block';
+            } else {
+                noticeEl.innerHTML = `아쉽지만 ${applicantName}님은 QPI 신규 부원 모집 명단에 없습니다.`;
+                passBtn.style.display = 'none';
+            }
+        });
 
         function goBack() {
             window.location.href = "index.html";
