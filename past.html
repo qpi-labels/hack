@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QPI 부원 모집 결과 조회</title>
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/helvetica-neue-55');
+        @import url('https://fonts.cdnfonts.com/css/br-cobane');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "BR Cobane", 'Pretendard Variable', TossFace, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .main-container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .brand-header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .brand-logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff 0%, #e0e7ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .brand-subtitle {
+            font-size: 0.95rem;
+            font-weight: 300;
+            opacity: 0.9;
+            letter-spacing: 0.02em;
+        }
+        
+        .form-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 40px 32px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.1),
+                0 8px 32px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+        
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
+            border-radius: 24px 24px 0 0;
+        }
+        
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+            text-align: center;
+            margin-bottom: 32px;
+            letter-spacing: -0.01em;
+        }
+        
+        .input-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+        
+        .input-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 8px;
+            letter-spacing: 0.01em;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 400;
+            color: #1e293b;
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+        }
+        
+        .input-group input::placeholder {
+            color: #9ca3af;
+            font-weight: 300;
+        }
+        
+        .input-group input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-1px);
+        }
+        
+        .input-group input:hover:not(:focus) {
+            border-color: #d1d5db;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .date-input-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .date-input-container select {
+            flex: 1;
+            min-width: 80px;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 400;
+            color: #1e293b;
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+            cursor: pointer;
+        }
+        
+        .date-input-container select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-1px);
+        }
+        
+        .date-input-container select:hover:not(:focus) {
+            border-color: #d1d5db;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .date-input-container input#day {
+            width: 80px;
+            text-align: center;
+        }
+        
+        .date-separator {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #6b7280;
+            white-space: nowrap;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 15px rgba(102, 126, 234, 0.3),
+                0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(102, 126, 234, 0.4),
+                0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 
+                0 4px 15px rgba(102, 126, 234, 0.3),
+                0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .helper-text {
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+        
+        /* 모바일 반응형 */
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+            
+            .brand-logo {
+                font-size: 2rem;
+            }
+            
+            .form-container {
+                padding: 32px 24px;
+                border-radius: 20px;
+            }
+            
+            .form-title {
+                font-size: 1.25rem;
+                margin-bottom: 28px;
+            }
+            
+            .input-group {
+                margin-bottom: 20px;
+            }
+            
+            .input-group input {
+                padding: 14px 16px;
+                font-size: 0.95rem;
+            }
+            
+            .date-input-container select {
+                padding: 14px 16px;
+                font-size: 0.95rem;
+                min-width: 70px;
+            }
+            
+            .date-input-container input#day {
+                width: 70px;
+                padding: 14px 12px;
+            }
+            
+            .date-separator {
+                font-size: 0.8rem;
+            }
+            
+            .submit-btn {
+                padding: 14px 20px;
+                font-size: 0.95rem;
+            }
+        }
+        
+        /* 애니메이션 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .main-container {
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .input-group {
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .input-group:nth-child(2) { animation-delay: 0.1s; }
+        .input-group:nth-child(3) { animation-delay: 0.2s; }
+        .input-group:nth-child(4) { animation-delay: 0.3s; }
+        .submit-btn { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="brand-header">
+            <div class="brand-logo">QPI</div>
+            <div class="brand-subtitle">작은 조각이 만드는 큰 가능성</div>
+        </div>
+        
+        <div class="form-container">
+            <h1 class="form-title">QPI 부원 모집 조회</h1>
+            <form onsubmit="submitForm(event)">
+                <div class="input-group">
+                    <label for="examNumber">학번</label>
+                    <input type="text" id="examNumber" placeholder="학번" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="dob">생년월일</label>
+                    <div class="date-input-container">
+                        <select id="year" required>
+                            <option value="">연도</option>
+                        </select>
+                        <span class="date-separator">년</span>
+                        <select id="month" required>
+                            <option value="">월</option>
+                            <option value="1">1월</option>
+                            <option value="2">2월</option>
+                            <option value="3">3월</option>
+                            <option value="4">4월</option>
+                            <option value="5">5월</option>
+                            <option value="6">6월</option>
+                            <option value="7">7월</option>
+                            <option value="8">8월</option>
+                            <option value="9">9월</option>
+                            <option value="10">10월</option>
+                            <option value="11">11월</option>
+                            <option value="12">12월</option>
+                        </select>
+                        <input type="number" id="day" placeholder="일" min="1" max="31" required>
+                        <span class="date-separator">일</span>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="name">지원자명</label>
+                    <input type="text" id="name" placeholder="이름" required>
+                </div>
+                
+                <button type="submit" class="submit-btn">결과 확인</button>
+            </form>
+            
+            <p class="helper-text">정확한 정보를 입력해 주세요</p>
+        </div>
+    </div>
+    
+    <script>
+        // 연도 옵션 생성 (현재 연도 기준으로 -100년부터 현재까지)
+        function populateYears() {
+            const yearSelect = document.getElementById('year');
+            const currentYear = new Date().getFullYear();
+            
+            for (let year = currentYear; year >= currentYear - 100; year--) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year + '년';
+                yearSelect.appendChild(option);
+            }
+        }
+        
+        // 일자 유효성 검사 (월별 최대 일수)
+        function validateDay() {
+            const year = parseInt(document.getElementById('year').value);
+            const month = parseInt(document.getElementById('month').value);
+            const dayInput = document.getElementById('day');
+            const day = parseInt(dayInput.value);
+            
+            if (year && month && day) {
+                const maxDay = new Date(year, month, 0).getDate(); // 해당 월의 마지막 날
+                
+                if (day > maxDay) {
+                    dayInput.value = maxDay;
+                    alert(`${month}월은 최대 ${maxDay}일까지 입니다.`);
+                }
+                
+                dayInput.max = maxDay;
+            }
+        }
+        
+        function submitForm(event) {
+            event.preventDefault();
+            
+            const examNumber = document.getElementById('examNumber').value;
+            const year = document.getElementById('year').value;
+            const month = document.getElementById('month').value;
+            const day = document.getElementById('day').value;
+            const name = document.getElementById('name').value;
+            
+            // 생년월일 형식 생성
+            const dob = `${year}년 ${month}월 ${day}일`;
+            
+            
+            if (!year || !month || !day) {
+                alert('생년월일을 모두 입력해 주세요.');
+                return;
+            }
+            
+            // 일자 유효성 검사
+            const maxDay = new Date(year, month, 0).getDate();
+            if (day < 1 || day > maxDay) {
+                alert(`${month}월은 1일부터 ${maxDay}일까지 입력 가능합니다.`);
+                return;
+            }
+            
+            // 로딩 효과
+            const submitBtn = event.target.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '확인 중...';
+            submitBtn.disabled = true;
+            
+            // 실제로는 여기서 서버 요청을 보내거나 결과 페이지로 이동
+            setTimeout(() => {
+                window.location.href = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}`;
+            }, 1000);
+        }
+        
+        // 페이지 로드 시 실행
+        document.addEventListener('DOMContentLoaded', function() {
+            populateYears();
+            
+            // 월과 일 변경 시 유효성 검사
+            document.getElementById('month').addEventListener('change', validateDay);
+            document.getElementById('day').addEventListener('input', validateDay);
+            document.getElementById('year').addEventListener('change', validateDay);
+        });
+        
+        // 입력 필드에 포커스 애니메이션 추가
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
