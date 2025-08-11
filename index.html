@@ -1,133 +1,172 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QPI 부원 모집 조회</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
-    
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-      margin: 0;
-      background: linear-gradient(180deg, #7d5fff, #5b4bff);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .page-wrapper {
-      text-align: center;
-    }
-
-    .logo {
-      font-size: 28px;
-      font-weight: bold;
-      color: white;
-    }
-
-    .subtitle {
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.8);
-      margin-top: -4px;
-      margin-bottom: 20px;
-    }
-
-    .container {
-      background: #fff;
-      border-radius: 20px;
-      padding: 30px;
-      width: 320px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-
-    .container h1 {
-      font-size: 20px;
-      margin-bottom: 15px;
-      font-weight: bold;
-    }
-
-    label {
-      display: block;
-      text-align: left;
-      margin: 15px 0 5px;
-      font-size: 14px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
-
-    /* 연도/월/일 한 줄 배치 */
-    .inline-group {
-      display: flex;
-      gap: 8px;
-    }
-
-    .inline-group select {
-      flex: 1;
-      min-width: 60px;
-    }
-
-    .inline-group input {
-      flex: 1;
-    }
-
-    button {
-      margin-top: 20px;
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(90deg, #6a5af9, #8363f6);
-      color: white;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    small {
-      display: block;
-      margin-top: 10px;
-      font-size: 12px;
-      color: #777;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QPI 부원 모집 결과 조회</title>
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/helvetica-neue-55');
+        @import url('https://fonts.cdnfonts.com/css/br-cobane');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "BR Cobane", 'Pretendard Variable', TossFace, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px; position: relative; overflow-x: hidden;
+        }
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none; z-index: 0;
+        }
+        .main-container { position: relative; z-index: 1; animation: fadeInUp 0.8s ease; }
+        .brand-header { text-align: center; margin-bottom: 40px; color: white; }
+        .brand-logo {
+            font-size: 2.5rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff 0%, #e0e7ff 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .brand-subtitle { font-size: 0.95rem; font-weight: 300; opacity: 0.9; letter-spacing: 0.02em; }
+        .form-container {
+            width: 100%; max-width: 420px; padding: 40px 32px;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
+            border-radius: 24px; box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.1),
+                0 8px 32px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+        .form-title {
+            font-size: 1.5rem; font-weight: 600; color: #1e293b;
+            text-align: center; margin-bottom: 32px;
+        }
+        .input-group { margin-bottom: 24px; }
+        .input-group label { display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 8px; }
+        .input-group input, .date-input-container select {
+            width: 100%; padding: 16px 20px; border: 2px solid #e5e7eb; border-radius: 12px;
+            font-size: 1rem; background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease; outline: none;
+        }
+        .date-input-container { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .date-input-container input#day { width: 80px; text-align: center; }
+        .date-separator { font-size: 0.875rem; font-weight: 500; color: #6b7280; }
+        .submit-btn {
+            width: 100%; padding: 16px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;
+        }
+        .helper-text { font-size: 0.75rem; color: #6b7280; text-align: center; margin-top: 20px; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
 <body>
-  <div class="page-wrapper">
-    <div class="logo">QPI</div>
-    <p class="subtitle">작은 조각이 만드는 큰 가능성</p>
-
-    <div class="container">
-      <h1>QPI 부원 모집 조회</h1>
-      
-      <label for="student-id">학번</label>
-      <input type="text" id="student-id" placeholder="학번" />
-
-      <label>생년월일</label>
-      <div class="inline-group">
-        <select id="birth-year">
-          <option>연도</option>
-        </select>
-        <select id="birth-month">
-          <option>월</option>
-        </select>
-        <input type="number" id="birth-day" placeholder="일" min="1" max="31" />
-      </div>
-
-      <label for="name">지원자명</label>
-      <input type="text" id="name" placeholder="이름" />
-
-      <button>결과 확인</button>
-      <small>정확한 정보를 입력해 주세요</small>
+    <div class="main-container">
+        <div class="brand-header">
+            <div class="brand-logo">QPI</div>
+            <div class="brand-subtitle">작은 조각이 만드는 큰 가능성</div>
+        </div>
+        
+        <div class="form-container">
+            <h1 class="form-title">QPI 부원 모집 조회</h1>
+            <form onsubmit="submitForm(event)">
+                <div class="input-group">
+                    <label for="examNumber">학번</label>
+                    <input type="text" id="examNumber" placeholder="학번" required>
+                </div>
+                <div class="input-group">
+                    <label for="dob">생년월일</label>
+                    <div class="date-input-container">
+                        <select id="year" required><option value="">연도</option></select>
+                        <span class="date-separator">년</span>
+                        <select id="month" required>
+                            <option value="">월</option>
+                            <option value="1">1월</option><option value="2">2월</option>
+                            <option value="3">3월</option><option value="4">4월</option>
+                            <option value="5">5월</option><option value="6">6월</option>
+                            <option value="7">7월</option><option value="8">8월</option>
+                            <option value="9">9월</option><option value="10">10월</option>
+                            <option value="11">11월</option><option value="12">12월</option>
+                        </select>
+                        <input type="number" id="day" placeholder="일" min="1" max="31" required>
+                        <span class="date-separator">일</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="name">지원자명</label>
+                    <input type="text" id="name" placeholder="이름" required>
+                </div>
+                <button type="submit" class="submit-btn">결과 확인</button>
+            </form>
+            <p class="helper-text">정확한 정보를 입력해 주세요</p>
+        </div>
     </div>
-  </div>
+
+    <script>
+        function populateYears() {
+            const yearSelect = document.getElementById('year');
+            const currentYear = new Date().getFullYear();
+            for (let year = currentYear; year >= currentYear - 100; year--) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year + '년';
+                yearSelect.appendChild(option);
+            }
+        }
+
+        async function submitForm(event) {
+            event.preventDefault();
+            
+            const examNumber = document.getElementById('examNumber').value.trim();
+            const year = document.getElementById('year').value;
+            const month = document.getElementById('month').value;
+            const day = document.getElementById('day').value;
+            const name = document.getElementById('name').value.trim();
+
+            if (!year || !month || !day) {
+                alert('생년월일을 모두 입력해 주세요.');
+                return;
+            }
+            const maxDay = new Date(year, month, 0).getDate();
+            if (day < 1 || day > maxDay) {
+                alert(`${month}월은 1일부터 ${maxDay}일까지 입력 가능합니다.`);
+                return;
+            }
+            const dob = `${year}년 ${month}월 ${day}일`;
+
+            const submitBtn = event.target.querySelector('.submit-btn');
+            submitBtn.textContent = '확인 중...';
+            submitBtn.disabled = true;
+
+    try {
+        const response = await fetch('list.json');
+        const data = await response.json();
+
+        let found = false;
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].examNumber === examNumber && data[i].name === name) {
+                found = true;
+                break;
+            }
+        }
+
+        if (found) {
+            window.location.href = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}&status=pass`;
+        } else {
+            window.location.href = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}&status=fail`;
+        }
+    } catch (error) {
+        alert('명단을 불러오는 중 오류가 발생했습니다.');
+        console.error(error);
+    }
+}
+
+        document.addEventListener('DOMContentLoaded', populateYears);
+    </script>
 </body>
 </html>
