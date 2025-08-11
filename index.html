@@ -47,12 +47,26 @@
         }
         .input-group { margin-bottom: 24px; }
         .input-group label { display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 8px; }
+        
+        /* [수정] 공통 스타일에서 width: 100% 제거 */
         .input-group input, .date-input-container select {
-            width: 100%; padding: 16px 20px; border: 2px solid #e5e7eb; border-radius: 12px;
+            padding: 16px 20px; border: 2px solid #e5e7eb; border-radius: 12px;
             font-size: 1rem; background: rgba(255, 255, 255, 0.8);
             transition: all 0.3s ease; outline: none;
         }
+
+        /* [수정] 학번, 이름 입력창에만 width: 100% 적용 */
+        .input-group input {
+             width: 100%;
+        }
+
         .date-input-container { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+        /* [수정] 연도, 월 선택창이 공간을 유연하게 차지하도록 flex: 1; 추가 */
+        .date-input-container select {
+            flex: 1;
+        }
+
         .date-input-container input#day { width: 80px; text-align: center; }
         .date-separator { font-size: 0.875rem; font-weight: 500; color: #6b7280; }
         .submit-btn {
@@ -143,28 +157,29 @@
             submitBtn.textContent = '확인 중...';
             submitBtn.disabled = true;
 
-    try {
-        const response = await fetch('list.json');
-        const data = await response.json();
+            try {
+                const response = await fetch('list.json');
+                const data = await response.json();
 
-        let found = false;
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].examNumber === examNumber && data[i].name === name) {
-                found = true;
-                break;
+                let found = false;
+                for (let i = 0; i < data.length; i++) {
+                    // [수정] list.json의 키값인 "학번", "이름"으로 올바르게 수정
+                    if (data[i].학번 === examNumber && data[i].이름 === name) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) {
+                    window.location.href = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}&status=pass`;
+                } else {
+                    window.location.href = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}&status=fail`;
+                }
+            } catch (error) {
+                alert('명단을 불러오는 중 오류가 발생했습니다.');
+                console.error(error);
             }
         }
-
-        if (found) {
-            window.location.href = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}&status=pass`;
-        } else {
-            window.location.href = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}&status=fail`;
-        }
-    } catch (error) {
-        alert('명단을 불러오는 중 오류가 발생했습니다.');
-        console.error(error);
-    }
-}
 
         document.addEventListener('DOMContentLoaded', populateYears);
     </script>
