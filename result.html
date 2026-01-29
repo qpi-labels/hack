@@ -73,6 +73,70 @@
         function goBack() {
             window.location.href = "index.html";
         }
+        
+document.getElementById('passButton').addEventListener('click', function() {
+    const examNumber = sessionStorage.getItem('examNumber') || '-';
+    const dob = sessionStorage.getItem('dob') || '-';
+    const name = sessionStorage.getItem('name') || '-';
+    const today = new Date();
+    const dateString = `${today.getFullYear()}. ${String(today.getMonth() + 1).padStart(2, '0')}. ${String(today.getDate()).padStart(2, '0')}.`;
+
+    const printWindow = window.open('', '_blank', 'width=800,height=1000');
+    
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>합격증 출력</title>
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+                body { font-family: 'Noto Sans KR', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+                .certificate-card { width: 190mm; height: 270mm; padding: 20mm; border: 1px solid #000; position: relative; box-sizing: border-box; text-align: center; }
+                .header-logo { display: flex; align-items: center; justify-content: flex-start; margin-bottom: 50px; }
+                .header-logo img { height: 50px; margin-right: 15px; }
+                .header-logo .school-name { text-align: left; font-size: 14px; color: #555; line-height: 1.2; }
+                .title { font-size: 60px; font-weight: bold; letter-spacing: 20px; margin: 60px 0; text-decoration: underline; text-underline-offset: 15px; }
+                .info-table { margin: 40px auto; font-size: 22px; text-align: left; width: 80%; }
+                .info-table div { margin-bottom: 15px; }
+                .info-table span { display: inline-block; width: 120px; font-weight: bold; }
+                .content { font-size: 24px; line-height: 1.8; margin: 80px 0; font-weight: 500; }
+                .date { font-size: 20px; margin-bottom: 80px; }
+                .footer-name { font-size: 36px; font-weight: bold; letter-spacing: 5px; }
+                @media print {
+                    body { margin: 0; }
+                    .certificate-card { border: none; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="certificate-card">
+                <div class="header-logo">
+                    <img src="logo.png" alt="Logo">
+                    <div class="school-name">Chungnam Science High School<br><strong>충남과학고등학교</strong></div>
+                </div>
+                <div class="title">합격증</div>
+                <div class="info-table">
+                    <div><span>학번 :</span> ${examNumber}</div>
+                    <div><span>생년월일 :</span> ${dob}</div>
+                    <div><span>성명 :</span> ${name}</div>
+                </div>
+                <div class="content">
+                    위 사람은 2026학년도 QPI<br>신입부원 모집에 합격하였습니다.
+                </div>
+                <div class="date">${dateString}</div>
+                <div class="footer-name">QPI 동아리 회장</div>
+            </div>
+            <script>
+                window.onload = function() {
+                    window.print();
+                    // window.close(); // 인쇄 후 창을 닫고 싶다면 주석 해제
+                };
+            <\/script>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+});
+
     </script>
 </body>
 </html>
