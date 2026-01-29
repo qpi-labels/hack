@@ -155,7 +155,8 @@
             }
 
             const status = found ? 'pass' : 'fail';
-            const url = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}&status=${status}`;
+            sessionStorage.setItem("status", status);
+            const url = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}`;
             window.location.href = url;
 
         } catch (error) {

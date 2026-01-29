@@ -52,7 +52,7 @@
             const examNumber = urlParams.get('examNumber');
             const dob = urlParams.get('dob');
             const name = urlParams.get('name');
-            const status = urlParams.get('status');
+            const status = sessionStorage.getItem('status');
 
             document.getElementById('displayExamNumber').textContent = examNumber || '-';
             document.getElementById('displayDob').textContent = dob || '-';
