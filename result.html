@@ -48,10 +48,9 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const examNumber = urlParams.get('examNumber');
-            const dob = urlParams.get('dob');
-            const name = urlParams.get('name');
+            const examNumber = sessionStorage.getItem('examNumber');
+            const dob = sessionStorage.getItem('dob');
+            const name = sessionStorage.getItem('name');
             const status = sessionStorage.getItem('status');
 
             document.getElementById('displayExamNumber').textContent = examNumber || '-';

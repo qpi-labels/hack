@@ -154,10 +154,11 @@
                 }
             }
 
-            const status = found ? 'pass' : 'fail';
-            sessionStorage.setItem("status", status);
-            const url = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}`;
-            window.location.href = url;
+            sessionStorage.setItem("examNumber", examNumber);
+            sessionStorage.setItem("dob", dob);
+            sessionStorage.setItem("name", name);
+            sessionStorage.setItem("status", found ? 'pass' : 'fail');
+            window.location.href = 'result.html';
 
         } catch (error) {
             alert('오류: ' + error.message);
