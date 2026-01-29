@@ -47,9 +47,8 @@
         }
         .input-group { margin-bottom: 24px; }
         .input-group label { display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 8px; }
-        .input-group input { width: 100%; }
         .input-group input, .date-input-container select {
-            padding: 16px 20px; border: 2px solid #e5e7eb; border-radius: 12px;
+            width: 100%; padding: 16px 20px; border: 2px solid #e5e7eb; border-radius: 12px;
             font-size: 1rem; background: rgba(255, 255, 255, 0.8);
             transition: all 0.3s ease; outline: none;
         }
@@ -63,6 +62,7 @@
             color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600;
             cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;
         }
+        .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
         .helper-text { font-size: 0.75rem; color: #6b7280; text-align: center; margin-top: 20px; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -79,7 +79,7 @@
             <form onsubmit="submitForm(event)">
                 <div class="input-group">
                     <label for="examNumber">학번</label>
-                    <input type="text" id="examNumber" placeholder="학번" required>
+                    <input type="text" id="examNumber" placeholder="학번 (예: 2308)" required>
                 </div>
                 <div class="input-group">
                     <label for="dob">생년월일</label>
@@ -113,7 +113,7 @@
     function populateYears() {
         const yearSelect = document.getElementById('year');
         const currentYear = new Date().getFullYear();
-        for (let year = currentYear; year >= currentYear - 100; year--) {
+        for (let year = currentYear; year >= currentYear - 30; year--) {
             const option = document.createElement('option');
             option.value = year;
             option.textContent = year + '년';
@@ -130,54 +130,41 @@
         const day = document.getElementById('day').value;
         const name = document.getElementById('name').value.trim();
 
-        if (!year || !month || !day) {
-            alert('생년월일을 모두 입력해 주세요.');
-            return;
-        }
-        const maxDay = new Date(year, month, 0).getDate();
-        if (day < 1 || day > maxDay) {
-            alert(`${month}월은 1일부터 ${maxDay}일까지 입력 가능합니다.`);
-            return;
-        }
         const dob = `${year}년 ${month}월 ${day}일`;
-
         const submitBtn = event.target.querySelector('.submit-btn');
         submitBtn.textContent = '확인 중...';
         submitBtn.disabled = true;
 
         try {
-            // [핵심 수정] 경로를 현재 폴더 기준으로 명확하게 './'를 추가했습니다.
-            const response = await fetch('./list.json'); 
+            // 캐시 방지를 위해 랜덤 쿼리 추가
+            const response = await fetch('./list.json?t=' + new Date().getTime()); 
+            if (!response.ok) throw new Error("데이터 파일을 찾을 수 없습니다.");
             
-            if (!response.ok) {
-                // 404 Not Found 등 에러가 발생하면 여기서 잡힙니다.
-                throw new Error(`파일을 불러오는데 실패했습니다. (Status: ${response.status})`);
-            }
             const data = await response.json();
 
             let found = false;
             for (let i = 0; i < data.length; i++) {
-                if (data[i].학번 === examNumber && data[i].이름 === name) {
+                // JSON의 키가 한글일 경우 인코딩 문제에 민감하므로 최대한 안전하게 비교
+                const targetId = String(data[i].학번 || "").trim();
+                const targetName = String(data[i].이름 || "").trim();
+
+                if (targetId === examNumber && targetName === name) {
                     found = true;
                     break;
                 }
             }
 
-            if (found) {
-                window.location.href = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}&status=pass`;
-            } else {
-                window.location.href = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}&status=fail`;
-            }
+            const status = found ? 'pass' : 'fail';
+            const url = `result.html?examNumber=${encodeURIComponent(examNumber)}&dob=${encodeURIComponent(dob)}&name=${encodeURIComponent(name)}&status=${status}`;
+            window.location.href = url;
+
         } catch (error) {
-            // 오류 발생 시 사용자에게 알려줍니다.
-            alert('오류가 발생했습니다. 깃허브 리포지토리에 list.json 파일이 올바르게 올라가 있는지 확인해주세요. 에러 내용: ' + error.message);
-            console.error(error);
+            alert('오류: ' + error.message);
             submitBtn.textContent = '결과 확인';
             submitBtn.disabled = false;
         }
     }
-
     document.addEventListener('DOMContentLoaded', populateYears);
-</script>
+    </script>
 </body>
 </html>
