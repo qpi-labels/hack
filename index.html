@@ -3,89 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QPI 부원 모집 결과 조회</title>
+    <link rel="shortcut icon" type="image/x-icon" href="./logo.ico">
+    <title>쿼터파이 부원 모집 결과 조회</title>
+    <!-- 폰트 로드 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    
     <style>
-        @import url('https://fonts.cdnfonts.com/css/helvetica-neue-55');
-        @import url('https://fonts.cdnfonts.com/css/br-cobane');
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* --- 쿼터파이 디자인 시스템 --- */
+        :root {
+            --bg: #FEF9E6;
+            --text: #282828;
+            --red-dark: #8B1F28;
+            --red-main: #BC1F1F;
+            --orange: #CC5419;
+            --yellow: #D4A829;
+            --gray-line: rgba(0,0,0,0.1);
+            --input-bg: #FFFFFF;
+            --font-serif: "Noto Serif KR", serif;
+            --font-sans: "Pretendard", sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+
         body {
-            font-family: "BR Cobane", 'Pretendard Variable', TossFace, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
             min-height: 100vh;
-            display: flex; justify-content: center; align-items: center;
-            padding: 20px; position: relative; overflow-x: hidden;
-        }
-        body::before {
-            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-            pointer-events: none; z-index: 0;
-        }
-        .main-container { position: relative; z-index: 1; animation: fadeInUp 0.8s ease; }
-        .brand-header { text-align: center; margin-bottom: 40px; color: white; }
-        .brand-logo {
-            font-size: 2.5rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px;
-            background: linear-gradient(135deg, #fff 0%, #e0e7ff 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .brand-subtitle { font-size: 0.95rem; font-weight: 300; opacity: 0.9; letter-spacing: 0.02em; }
-        .form-container {
-            width: 100%; max-width: 420px; padding: 40px 32px;
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
-            border-radius: 24px; box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.1),
-                0 8px 32px rgba(0, 0, 0, 0.05),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             position: relative;
+            padding: 20px;
+        }
+
+        /* 종이 질감 효과 */
+        .paper-grain {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 0; opacity: 0.6;
+        }
+
+        /* 컨테이너 */
+        .main-container {
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        /* 카드 스타일 */
+        .form-card {
+            background: var(--bg);
+            border: 1.5px solid var(--text);
+            padding: 40px 32px;
+            position: relative;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+        }
+
+        /* VHS 디자인 요소 */
+        .vhs-deco {
+            display: flex; flex-direction: column; gap: 4px;
+            margin-bottom: 30px;
+        }
+        .stripe { width: 100%; }
+        .s-3 { height: 12px; background: var(--red-main); }
+        .s-2 { height: 8px; background: var(--orange); }
+        .s-1 { height: 4px; background: var(--yellow); }
+
+        /* 헤더 텍스트 */
+        .brand-header { margin-bottom: 20px; text-align: left; }
+        .brand-logo {
+            font-family: var(--font-serif);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--red-dark);
+            margin-bottom: 8px;
+            display: block;
         }
         .form-title {
-            font-size: 1.5rem; font-weight: 600; color: #1e293b;
-            text-align: center; margin-bottom: 32px;
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--text);
+            word-break: keep-all;
         }
+
+        /* 입력 폼 스타일 */
         .input-group { margin-bottom: 24px; }
-        .input-group label { display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 8px; }
-        .input-group input, .date-input-container select {
-            width: 100%; padding: 16px 20px; border: 2px solid #e5e7eb; border-radius: 12px;
-            font-size: 1rem; background: rgba(255, 255, 255, 0.8);
-            transition: all 0.3s ease; outline: none;
+        .input-group label {
+            display: block;
+            font-family: var(--font-serif);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--red-dark);
+            margin-bottom: 8px;
         }
-        .date-input-container { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+        .input-group input, 
+        .input-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #ccc;
+            border-radius: 0; /* 아날로그 느낌을 위해 둥근 모서리 제거 */
+            font-size: 1rem;
+            font-family: var(--font-sans);
+            background: var(--input-bg);
+            color: var(--text);
+            transition: border-color 0.3s ease;
+            appearance: none; /* 기본 스타일 제거 */
+        }
+
+        .input-group input:focus, 
+        .input-group select:focus {
+            border-color: var(--red-main);
+            outline: none;
+        }
+
+        /* 날짜 입력 컨테이너 */
+        .date-input-container {
+            display: flex; gap: 10px;
+        }
         .date-input-container select { flex: 1; }
-        .date-input-container input#day { width: 80px; text-align: center; }
-        .date-separator { font-size: 0.875rem; font-weight: 500; color: #6b7280; }
+        .date-input-container input#day { flex: 0.8; text-align: center; }
+
+        /* 버튼 스타일 */
         .submit-btn {
-            width: 100%; padding: 16px 24px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600;
-            cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;
+            width: 100%;
+            padding: 16px 20px;
+            background: var(--red-dark);
+            color: var(--bg);
+            border: none;
+            border-radius: 50px;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
         }
-        .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
-        .helper-text { font-size: 0.75rem; color: #6b7280; text-align: center; margin-top: 20px; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .submit-btn:hover {
+            background: var(--red-main);
+            transform: translateY(-2px);
+        }
+        .submit-btn:disabled {
+            background: #ccc;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .helper-text {
+            font-size: 0.8rem;
+            color: #666;
+            text-align: center;
+            margin-top: 20px;
+            font-family: var(--font-serif);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .form-card { padding: 30px 20px; box-shadow: 6px 6px 0px rgba(0,0,0,0.1); }
+            .form-title { font-size: 1.7rem; }
+        }
     </style>
 </head>
 <body>
+    <div class="paper-grain"></div>
+
     <div class="main-container">
-        <div class="brand-header">
-            <div class="brand-logo">쿼터파이</div>
-            <div class="brand-subtitle">세상을 바꾸는 작은 움직임</div>
-        </div>
-        
-        <div class="form-container">
-            <h1 class="form-title">쿼터파이 부원 모집 조회</h1>
+        <div class="form-card">
+            <!-- VHS 장식 요소 -->
+            <div class="vhs-deco">
+                <div class="stripe s-3"></div>
+                <div class="stripe s-2"></div>
+                <div class="stripe s-1"></div>
+            </div>
+
+            <div class="brand-header">
+                <span class="brand-logo">2026 쿼터파이</span>
+                <h1 class="form-title">33기 부원 모집 결과 조회</h1>
+            </div>
+            
             <form onsubmit="submitForm(event)">
                 <div class="input-group">
                     <label for="examNumber">학번</label>
                     <input type="text" id="examNumber" placeholder="학번 (예: 2308)" required>
                 </div>
+
                 <div class="input-group">
-                    <label for="dob">생년월일</label>
+                    <label>생년월일</label>
                     <div class="date-input-container">
-                        <select id="year" required><option value="">연도</option></select>
-                        <span class="date-separator">년</span>
+                        <select id="year" required>
+                            <option value="">연도</option>
+                        </select>
                         <select id="month" required>
                             <option value="">월</option>
                             <option value="1">1월</option><option value="2">2월</option>
@@ -96,16 +215,17 @@
                             <option value="11">11월</option><option value="12">12월</option>
                         </select>
                         <input type="number" id="day" placeholder="일" min="1" max="31" required>
-                        <span class="date-separator">일</span>
                     </div>
                 </div>
+
                 <div class="input-group">
-                    <label for="name">지원자명</label>
-                    <input type="text" id="name" placeholder="이름" required>
+                    <label for="name">이름</label>
+                    <input type="text" id="name" placeholder="지원자 성명" required>
                 </div>
-                <button type="submit" class="submit-btn">결과 확인</button>
+
+                <button type="submit" class="submit-btn">결과 확인하기</button>
             </form>
-            <p class="helper-text">정확한 정보를 입력해 주세요</p>
+            <p class="helper-text">입력하신 정보는 조회 목적으로만 사용됩니다.</p>
         </div>
     </div>
 
@@ -113,7 +233,8 @@
     function populateYears() {
         const yearSelect = document.getElementById('year');
         const currentYear = new Date().getFullYear();
-        for (let year = currentYear; year >= currentYear - 30; year--) {
+        // 학생 대상이므로 범위를 조금 더 현실적으로 조정 (2000년생 ~ 현재)
+        for (let year = currentYear; year >= 2000; year--) {
             const option = document.createElement('option');
             option.value = year;
             option.textContent = year + '년';
@@ -130,21 +251,28 @@
         const day = document.getElementById('day').value;
         const name = document.getElementById('name').value.trim();
 
-        const dob = `${year}년 ${month}월 ${day}일`;
+        // 날짜 포맷팅 (자리수 맞춤)
+        const formattedMonth = month.padStart(2, '0');
+        const formattedDay = day.padStart(2, '0');
+        const dob = `${year}년 ${formattedMonth}월 ${formattedDay}일`; // 저장용 포맷 유지
+
         const submitBtn = event.target.querySelector('.submit-btn');
+        const originalText = submitBtn.textContent;
+        
         submitBtn.textContent = '확인 중...';
         submitBtn.disabled = true;
 
         try {
-            // 캐시 방지를 위해 랜덤 쿼리 추가
+            // 캐시 방지 쿼리
             const response = await fetch('./list.json?t=' + new Date().getTime()); 
-            if (!response.ok) throw new Error("데이터 파일을 찾을 수 없습니다.");
+            if (!response.ok) throw new Error("데이터 파일을 불러올 수 없습니다.");
             
             const data = await response.json();
 
             let found = false;
+            
+            // 데이터 비교 로직
             for (let i = 0; i < data.length; i++) {
-                // JSON의 키가 한글일 경우 인코딩 문제에 민감하므로 최대한 안전하게 비교
                 const targetId = String(data[i].학번 || "").trim();
                 const targetName = String(data[i].이름 || "").trim();
 
@@ -154,18 +282,22 @@
                 }
             }
 
+            // 세션 스토리지 저장
             sessionStorage.setItem("examNumber", examNumber);
             sessionStorage.setItem("dob", dob);
             sessionStorage.setItem("name", name);
             sessionStorage.setItem("status", found ? 'pass' : 'fail');
+            
+            // 결과 페이지 이동
             window.location.href = 'result.html';
 
         } catch (error) {
-            alert('오류: ' + error.message);
-            submitBtn.textContent = '결과 확인';
+            alert('오류가 발생했습니다: ' + error.message);
+            submitBtn.textContent = originalText;
             submitBtn.disabled = false;
         }
     }
+
     document.addEventListener('DOMContentLoaded', populateYears);
     </script>
 </body>
